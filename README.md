@@ -93,4 +93,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
+<div align="center">
 Made with ❤️ for drone security by waqas khan
+ <div>
