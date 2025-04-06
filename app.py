@@ -8,7 +8,7 @@ from ml_model import DroneAttackDetector
 import json
 from datetime import datetime
 
-# Initialize Flask and Dash
+# ======================= Initialize Flask and Dash ======================= 
 server = Flask(__name__)
 app = Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -18,11 +18,11 @@ try:
 except:
     detector = DroneAttackDetector()
 
-# Store recent predictions for visualization
+# ======================= Store recent predictions for visualization ======================= 
 recent_predictions = []
 MAX_STORED_PREDICTIONS = 100
 
-# Dashboard layout
+# ======================= Dashboard layout ======================= 
 app.layout = html.Div([
     html.H1("Drone Network Attack Detection Dashboard", className="text-center mb-4"),
     
@@ -52,22 +52,22 @@ app.layout = html.Div([
 
 @server.route('/predict', methods=['POST'])
 def predict():
-    """
-    Endpoint for making predictions on new data
-    """
+   
+    # ======================= Endpoint for making predictions on new data ======================= 
+   
     try:
         data = request.json
         df = pd.DataFrame([data])
         prediction = detector.predict(df)[0]
         
-        # Store prediction for visualization
+        # ======================= Store prediction for visualization ======================= 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         recent_predictions.append({
             'timestamp': timestamp,
             'prediction': prediction
         })
         
-        # Keep only recent predictions
+        #  ======================= Keep only recent predictions ======================= 
         if len(recent_predictions) > MAX_STORED_PREDICTIONS:
             recent_predictions.pop(0)
         
@@ -89,17 +89,17 @@ def predict():
     [Input('interval-component', 'n_intervals')]
 )
 def update_dashboard(n):
-    """
-    Update dashboard components
-    """
-    # Update current status
+   
+    #  ======================= Update dashboard components ======================= 
+  
+    # ======================= Update current status ======================= 
     if recent_predictions:
         latest = recent_predictions[-1]
         current_status = f"Latest Detection: {latest['prediction']}"
     else:
         current_status = "No attacks detected"
     
-    # Update history graph
+    # =======================  Update history graph ======================= 
     df = pd.DataFrame(recent_predictions)
     if not df.empty:
         fig = px.line(df, x='timestamp', y='prediction', 
